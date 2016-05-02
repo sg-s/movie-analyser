@@ -16,6 +16,25 @@ a MATLAB class to help you bootstrap your image analysis problem.
 Debugging got a lot simpler, and you can spend more time writing actually useful code. 
 
 
+## Installation
+
+The recommended way to install this is to use my package manager:
+
+```matlab
+urlwrite('http://srinivas.gs/install.m','install.m'); 
+install movieAnalyser
+install srinivas.gs_mtools  
+
+## Usage
+
+### 1. build a interface to read your movie/data file
+
+By default, `movieAnalyser` assumes your movies are HDF5 (.mat v7.3+) files with the images stored in a variable called `images`. `movieAnalyser` uses `matfile` to speed up data reads. If your data format is different, you need to change the line that reads the movie in `movieAnalyser.showImage`. 
+
+### 2. add your tracking/analysis code 
+
+`movieAnalyser` uses  `movieAnalyser.showImage` to read each image frame by frame. Simply add your code to that function and it will be called for each frame. 
+
 # License 
 
 data-manager is free software. 

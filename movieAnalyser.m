@@ -1,3 +1,9 @@
+%% movieAnalyser.m
+% a barebones MATLAB class to boostrap your image analysis problem
+% usage:
+% 
+% 1. 
+
 classdef movieAnalyser < handle
 
 	properties
@@ -37,6 +43,7 @@ classdef movieAnalyser < handle
 
 	
 		function m = set.path_name(m,value)
+			% ~~~~~~~ change me if your data is not a MAT file ~~~~~~~~~~~~~~~~~
 			% verify it is there
 			if isa(value,'matlab.io.MatFile')
 			else
@@ -47,6 +54,8 @@ classdef movieAnalyser < handle
 
 			% figure out how many frames there are
 			[~,~,m.nframes] = size(m.path_name,'images');
+
+			%% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 		end % end set path_name
 
@@ -66,7 +75,18 @@ classdef movieAnalyser < handle
 		end
 
 		function m = showImage(m)
+
+			%% ~~~~~~~~~ change me to suit your data type ~~~~~~~~~~~~~~~
 			m.handles.im.CData = m.path_name.images(:,:,m.current_frame);
+
+
+			%% ~~~~~~~~~~~ add your image processing code here ~~~~~~~~~~~~~
+			% awesomeImageTracking(m)
+			% wowSoCool;
+			% muchImage;
+			%% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
 			m.handles.fig.Name = ['Frame # ' oval(m.current_frame)];
 			drawnow
 		end
