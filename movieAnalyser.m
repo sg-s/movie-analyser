@@ -59,6 +59,11 @@ classdef movieAnalyser < handle
 
 		end % end set path_name
 
+		function m = set.current_frame(m,value)
+			m.current_frame = value;
+			m.showImage;
+		end % end set current_frame
+
 
 		function m = nextFrame(m,~,~)
 			if m.current_frame < m.nframes
