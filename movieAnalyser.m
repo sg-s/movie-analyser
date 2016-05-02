@@ -14,9 +14,6 @@ classdef movieAnalyser < handle
 	end
 
 	methods
-
-
-
 		function m = createGUI(m)
 			m.handles.fig = figure('PaperUnits','points','PaperSize',[900 900],'NumberTitle','off','MenuBar','none','ToolBar','figure'); hold on;
 			m.handles.fig.Tag = 'movieAnalyser';
@@ -33,15 +30,15 @@ classdef movieAnalyser < handle
 			m.handles.im = imagesc(NaN(2,2));
 
 			% if path_name is set, load the image
-			m.showImage;
+			if ~isempty(m.path_name)
+				m.operateOnFrame;
+			end
 
 			axis tight
 			axis equal
 
 		end % end createGUI function
-
-
-	
+		
 		function m = set.path_name(m,value)
 			% ~~~~~~~ change me if your data is not a MAT file ~~~~~~~~~~~~~~~~~
 			% verify it is there
@@ -61,7 +58,7 @@ classdef movieAnalyser < handle
 
 		function m = set.current_frame(m,value)
 			m.current_frame = value;
-			m.showImage;
+			m.operateOnFrame;
 		end % end set current_frame
 
 
@@ -69,29 +66,20 @@ classdef movieAnalyser < handle
 			if m.current_frame < m.nframes
 				m.current_frame = m.current_frame + 1;
 			end
-			m.showImage;
+			m.operateOnFrame;
 		end
 
 		function m = prevFrame(m,~,~)
 			if m.current_frame > 1
 				m.current_frame = m.current_frame - 1;
 			end
-			m.showImage;
+			m.operateOnFrame;
 		end
 
-		function m = showImage(m)
+		function m = operateOnFrame(m)
 
-			%% ~~~~~~~~~ change me to suit your data type ~~~~~~~~~~~~~~~
+			%% ~~~~~~~~~ redefine this method in your class ~~~~~~~~~~~~~~~
 			m.handles.im.CData = m.path_name.images(:,:,m.current_frame);
-
-
-			%% ~~~~~~~~~~~ add your image processing code here ~~~~~~~~~~~~~
-			% awesomeImageTracking(m)
-			% wowSoCool;
-			% muchImage;
-			%% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
 			m.handles.fig.Name = ['Frame # ' oval(m.current_frame)];
 			drawnow
 		end
@@ -103,7 +91,7 @@ classdef movieAnalyser < handle
 				for i = m.current_frame:m.nframes
 					m.current_frame  = i;
 					if strcmp(src.String,'Pause')
-						m.showImage;
+						m.operateOnFrame;
 					else
 						break
 					end
@@ -112,11 +100,7 @@ classdef movieAnalyser < handle
 				src.String = 'Play';
 			end
 
-		end
-
-
-
-
+		end % end toggle play
 	end% end all methods
 end	% end classdef
 
