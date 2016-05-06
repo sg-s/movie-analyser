@@ -15,7 +15,7 @@ classdef movieAnalyser < handle
 
 	methods
 		function m = createGUI(m)
-			m.handles.fig = figure('PaperUnits','points','PaperSize',[900 900],'NumberTitle','off','MenuBar','none','ToolBar','figure'); hold on;
+			m.handles.fig = figure('PaperUnits','points','PaperSize',[900 900],'NumberTitle','off','MenuBar','none','ToolBar','figure','CloseRequestFcn',@m.quitMovieAnalyser); hold on;
 			m.handles.fig.Tag = 'movieAnalyser';
 			m.handles.fig.Position(3) = 1280;
 			m.handles.fig.Position(4) = 800;
@@ -91,6 +91,19 @@ classdef movieAnalyser < handle
 			end
 
 		end % end toggle play
+
+		function m = quitMovieAnalyser(m,~,~)
+			% clear all handles
+			fn = fieldnames(m.handles);
+			for i = 1:length(fn)
+				try
+					delete(getfield(m.handles,fn{i}))
+				catch
+				end
+				m.handles = setfield(m.handles,fn{i},[]);
+			end
+		end
+
 	end% end all methods
 end	% end classdef
 
