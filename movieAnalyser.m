@@ -24,10 +24,6 @@ classdef movieAnalyser < handle
 			m.handles.next_button = uicontrol('Units','normalized','Position',[.55 .01 .1 .05],'String','>','Style','togglebutton','Value',1,'Callback',@m.nextFrame);
 			m.handles.next_button = uicontrol('Units','normalized','Position',[.35 .01 .1 .05],'String','<','Style','togglebutton','Value',1,'Callback',@m.prevFrame);
 			m.handles.ax.Position = [0.01 0.1 0.99 0.9];
-			m.handles.black_dots = plot(NaN,NaN);
-			m.handles.red_dots = plot(NaN,NaN);
-			m.handles.white_circles = plot(NaN,NaN);
-			m.handles.im = imagesc(NaN(2,2));
 
 			% if path_name is set, load the image
 			if ~isempty(m.path_name)
@@ -56,11 +52,6 @@ classdef movieAnalyser < handle
 
 		end % end set path_name
 
-		function m = set.current_frame(m,value)
-			m.current_frame = value;
-			m.operateOnFrame;
-		end % end set current_frame
-
 
 		function m = nextFrame(m,~,~)
 			if m.current_frame < m.nframes
@@ -77,9 +68,8 @@ classdef movieAnalyser < handle
 		end
 
 		function m = operateOnFrame(m)
-
 			%% ~~~~~~~~~ redefine this method in your class ~~~~~~~~~~~~~~~
-			m.handles.im.CData = m.path_name.images(:,:,m.current_frame);
+			imagesc(m.path_name.images(:,:,m.current_frame));
 			m.handles.fig.Name = ['Frame # ' oval(m.current_frame)];
 			drawnow
 		end
