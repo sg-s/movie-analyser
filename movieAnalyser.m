@@ -69,6 +69,7 @@ classdef movieAnalyser < handle
 
 		function m = operateOnFrame(m)
 			%% ~~~~~~~~~ redefine this method in your class ~~~~~~~~~~~~~~~
+			cla
 			imagesc(m.path_name.images(:,:,m.current_frame));
 			m.handles.fig.Name = ['Frame # ' oval(m.current_frame)];
 			drawnow
