@@ -15,7 +15,7 @@ classdef movieAnalyser < handle
 
 	methods
 		function m = createGUI(m)
-			m.handles.fig = figure('PaperUnits','points','PaperSize',[900 900],'NumberTitle','off','MenuBar','none','ToolBar','figure','CloseRequestFcn',@m.quitMovieAnalyser); hold on;
+			m.handles.fig = figure('NumberTitle','off','MenuBar','none','ToolBar','figure','CloseRequestFcn',@m.quitMovieAnalyser); hold on;
 			m.handles.fig.Tag = 'movieAnalyser';
 			m.handles.fig.Position(3) = 1280;
 			m.handles.fig.Position(4) = 800;
@@ -23,10 +23,15 @@ classdef movieAnalyser < handle
 			m.handles.pause_button = uicontrol('Units','normalized','Position',[.45 .01 .1 .05],'String','Play','Style','togglebutton','Value',1,'Callback',@m.togglePlay);
 			m.handles.next_button = uicontrol('Units','normalized','Position',[.55 .01 .1 .05],'String','>','Style','togglebutton','Value',1,'Callback',@m.nextFrame);
 			m.handles.next_button = uicontrol('Units','normalized','Position',[.35 .01 .1 .05],'String','<','Style','togglebutton','Value',1,'Callback',@m.prevFrame);
-			m.handles.ax.Position = [0.01 0.1 0.99 0.9];
+			m.handles.ax.Position = [0.01 0.15 0.99 0.85];
 
-			% if path_name is set, load the image
+			% make a scrubber
+			m.handles.scrubber = uicontrol('Units','normalized','Style','slider','Position',[0 0.09 1 .01],'Parent',m.handles.fig,'Min',1,'Max',m.current_frame+1,'Value',m.current_frame);
+			addlistener(m.handles.scrubber,'ContinuousValueChange',@m.scrubberCallback);
+
+			% if path_name is set, operate on frame
 			if ~isempty(m.path_name)
+				m.handles.scrubber.Max = m.nframes;
 				m.operateOnFrame;
 			end
 
@@ -35,6 +40,11 @@ classdef movieAnalyser < handle
 
 		end % end createGUI function
 		
+		function m = scrubberCallback(m,~,~)
+			m.current_frame = ceil(m.handles.scrubber.Value);
+			m.operateOnFrame;
+		end
+
 		function m = set.path_name(m,value)
 			% ~~~~~~~ change me if your data is not a MAT file ~~~~~~~~~~~~~~~~~
 			% verify it is there
@@ -67,7 +77,7 @@ classdef movieAnalyser < handle
 			m.operateOnFrame;
 		end
 
-		function m = operateOnFrame(m)
+		function m = operateOnFrame(m,~,~)
 			%% ~~~~~~~~~ redefine this method in your class ~~~~~~~~~~~~~~~
 			cla
 			imagesc(m.path_name.images(:,:,m.current_frame));
