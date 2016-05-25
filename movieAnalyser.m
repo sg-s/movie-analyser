@@ -26,8 +26,9 @@ classdef movieAnalyser < handle
 			m.handles.ax.Position = [0.01 0.15 0.99 0.85];
 
 			% make a scrubber
-			m.handles.scrubber = uicontrol('Units','normalized','Style','slider','Position',[0 0.09 1 .01],'Parent',m.handles.fig,'Min',1,'Max',m.current_frame+1,'Value',m.current_frame);
+			m.handles.scrubber = uicontrol('Units','normalized','Style','slider','Position',[0 0.09 1 .01],'Parent',m.handles.fig,'Min',1,'Max',m.current_frame+1,'Value',m.current_frame,'SliderStep',[.01 .02],'BusyAction','cancel','Interruptible','off');
 			addlistener(m.handles.scrubber,'ContinuousValueChange',@m.scrubberCallback);
+
 
 			% if path_name is set, operate on frame
 			if ~isempty(m.path_name)
@@ -79,7 +80,7 @@ classdef movieAnalyser < handle
 
 		function m = operateOnFrame(m,~,~)
 			%% ~~~~~~~~~ redefine this method in your class ~~~~~~~~~~~~~~~
-			cla
+			cla(m.handles.ax)
 			imagesc(m.path_name.images(:,:,m.current_frame));
 			m.handles.fig.Name = ['Frame # ' oval(m.current_frame)];
 			drawnow
@@ -91,6 +92,7 @@ classdef movieAnalyser < handle
 				% now loop through all frames
 				for i = m.current_frame:m.nframes
 					m.current_frame  = i;
+					m.handles.scrubber.Value = i;
 					if strcmp(src.String,'Pause')
 						m.operateOnFrame;
 					else
