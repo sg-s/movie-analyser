@@ -11,6 +11,7 @@ classdef movieAnalyser < handle
 		path_name
 		current_frame = 1;
 		nframes
+		variable_name = 'frames';
 	end
 
 	methods
@@ -57,7 +58,7 @@ classdef movieAnalyser < handle
 			m.path_name.Properties.Writable = true;
 
 			% figure out how many frames there are
-			[~,~,m.nframes] = size(m.path_name,'images');
+			[~,~,m.nframes] = size(m.path_name,m.variable_name);
 
 			%% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -80,8 +81,13 @@ classdef movieAnalyser < handle
 
 		function m = operateOnFrame(m,~,~)
 			%% ~~~~~~~~~ redefine this method in your class ~~~~~~~~~~~~~~~
+			%% what you probably want to do is first call the method from the superclass (movieAnalyser), and then redefine this function in your subclass
+			% see this link for more information:
+			% https://www.mathworks.com/help/matlab/matlab_oop/modifying-superclass-methods-and-properties.html
+			% 
 			cla(m.handles.ax)
-			imagesc(m.path_name.images(:,:,m.current_frame));
+			eval(['current_frame = m.path_name.' m.variable_name '(:,:,m.current_frame);']);
+			imagesc(current_frame);
 			m.handles.fig.Name = ['Frame # ' oval(m.current_frame)];
 			drawnow
 		end
