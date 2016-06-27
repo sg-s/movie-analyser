@@ -10,6 +10,7 @@ classdef movieAnalyser < handle
 		handles
 		path_name
 		current_frame = 1;
+		current_raw_frame 			% stores the raw image of the current working frame
 		nframes
 		variable_name = 'frames';
 	end
@@ -25,6 +26,8 @@ classdef movieAnalyser < handle
 			m.handles.next_button = uicontrol('Units','normalized','Position',[.55 .01 .1 .05],'String','>','Style','togglebutton','Value',1,'Callback',@m.nextFrame);
 			m.handles.next_button = uicontrol('Units','normalized','Position',[.35 .01 .1 .05],'String','<','Style','togglebutton','Value',1,'Callback',@m.prevFrame);
 			m.handles.ax.Position = [0.01 0.15 0.99 0.85];
+
+			m.handles.im = imagesc([0 0; 0 0]);
 
 			% make a scrubber
 			m.handles.scrubber = uicontrol('Units','normalized','Style','slider','Position',[0 0.09 1 .01],'Parent',m.handles.fig,'Min',1,'Max',m.current_frame+1,'Value',m.current_frame,'SliderStep',[.01 .02],'BusyAction','cancel','Interruptible','off');
@@ -85,11 +88,20 @@ classdef movieAnalyser < handle
 			% see this link for more information:
 			% https://www.mathworks.com/help/matlab/matlab_oop/modifying-superclass-methods-and-properties.html
 			% 
-			cla(m.handles.ax)
-			eval(['current_frame = m.path_name.' m.variable_name '(:,:,m.current_frame);']);
-			imagesc(current_frame);
-			m.handles.fig.Name = ['Frame # ' oval(m.current_frame)];
-			drawnow
+
+			% read frame
+			eval(['m.current_raw_frame = m.path_name.' m.variable_name '(:,:,m.current_frame);']);
+
+			if isfield(m.handles,'ax')
+				if ~isempty(m.handles.ax)
+					% cla(m.handles.ax)
+					% imagesc(m.current_raw_frame);
+					m.handles.im.CData = m.current_raw_frame;
+					m.handles.fig.Name = ['Frame # ' oval(m.current_frame)];
+					
+				end
+			end
+			
 		end
 
 		function m = togglePlay(m,src,~)
@@ -101,6 +113,7 @@ classdef movieAnalyser < handle
 					m.handles.scrubber.Value = i;
 					if strcmp(src.String,'Pause')
 						m.operateOnFrame;
+						drawnow limitrate
 					else
 						break
 					end
@@ -121,6 +134,22 @@ classdef movieAnalyser < handle
 				end
 				m.handles = setfield(m.handles,fn{i},[]);
 			end
+		end
+
+		function m = testReadSpeed(m)
+			% do a sequential read test
+			m.current_frame = 1;
+			a = 1;
+			z = min([m.nframes 100]);
+			tic;
+			for i = a:z
+				m.current_frame = i;
+				m.operateOnFrame;
+			end
+			t = toc;
+			disp([ oval(z-a) ' frames read in ' oval(t) ' seconds.'])
+
+
 		end
 
 	end% end all methods
