@@ -24,7 +24,7 @@ classdef movieAnalyser < handle
 			m.handles.ax = gca;
 			m.handles.pause_button = uicontrol('Units','normalized','Position',[.45 .01 .1 .05],'String','Play','Style','togglebutton','Value',1,'Callback',@m.togglePlay);
 			m.handles.next_button = uicontrol('Units','normalized','Position',[.55 .01 .1 .05],'String','>','Style','togglebutton','Value',1,'Callback',@m.nextFrame);
-			m.handles.next_button = uicontrol('Units','normalized','Position',[.35 .01 .1 .05],'String','<','Style','togglebutton','Value',1,'Callback',@m.prevFrame);
+			m.handles.prev_button = uicontrol('Units','normalized','Position',[.35 .01 .1 .05],'String','<','Style','togglebutton','Value',1,'Callback',@m.prevFrame);
 			m.handles.ax.Position = [0.01 0.15 0.99 0.85];
 
 			m.handles.im = imagesc([0 0; 0 0]);
@@ -148,8 +148,6 @@ classdef movieAnalyser < handle
 			end
 			t = toc;
 			disp([ oval(z-a) ' frames read in ' oval(t) ' seconds.'])
-
-
 		end
 
 	end% end all methods
