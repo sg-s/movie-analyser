@@ -13,6 +13,11 @@ classdef movieAnalyser < handle
 		current_raw_frame 			% stores the raw image of the current working frame
 		nframes
 		variable_name = 'frames';
+		median_start = 1;
+		median_stop = Inf;
+		median_step = 25; % frames
+		median_frame
+		subtract_median = true;
 	end
 
 	methods
@@ -92,6 +97,11 @@ classdef movieAnalyser < handle
 			% read frame
 			eval(['m.current_raw_frame = m.path_name.' m.variable_name '(:,:,m.current_frame);']);
 
+			% subtract median if necessary 
+			if m.subtract_median
+				m.current_raw_frame = m.current_raw_frame - m.median_frame;
+			end
+
 			if isfield(m.handles,'ax')
 				if ~isempty(m.handles.ax)
 					% cla(m.handles.ax)
@@ -150,7 +160,26 @@ classdef movieAnalyser < handle
 			disp([ oval(z-a) ' frames read in ' oval(t) ' seconds.'])
 		end
 
-	end% end all methods
+		function m = computeMedianFrame(m)
+			a = m.median_start;
+			z = min([m.median_stop m.nframes]);
+
+			% figure out the class of the matrix
+			dets = whos(m.path_name);
+			M = zeros(size(m.path_name,m.variable_name,1),size(m.path_name,m.variable_name,2),length(a:m.median_step:z),dets(find(strcmp(m.variable_name, {dets.name}))).class);
+
+			% read frames
+			read_these_frames = a:m.median_step:z;
+			for i = 1:length(read_these_frames)
+				cf = read_these_frames(i);
+				eval(['M(:,:,i) = m.path_name.' m.variable_name '(:,:,cf);']);
+			end
+			m.median_frame = median(M,3);
+
+
+		end % end computeMedianFrame
+
+	end % end all methods
 end	% end classdef
 
 
