@@ -70,10 +70,17 @@ classdef superTrack < movieAnalyser
 end
 ```
 
+## Methods
+
+- `createGUI` makes the GUI
+- `testReadSpeed` determines the time to read a hundred frames. If this is very slow, you're not going to have a good time
+- `computeMedianFrame` computes the median frame over some interval. Very useful in removing static backgrounds. 
+
 ## Limitations 
 
 1. `movieAnalyser` is explicitly designed for tracking algorithms that operate frame by frame. Something more complicated is outside its use case.
 2. `movieAnalyser` is capable only of playing back frames at a maximum speed of 20 frames per second, due to limitations in MATLAB's [graphics engine](https://www.mathworks.com/help/matlab/ref/drawnow.html)
+3. When working with a matrix containing a movie in a matfile, you should not store any other variable in that matfile, especially nested structures. This slows down read speeds dramatically. 
 
 # License 
 
