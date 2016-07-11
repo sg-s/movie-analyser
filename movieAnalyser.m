@@ -97,8 +97,9 @@ classdef movieAnalyser < handle
 			% read frame
 			eval(['m.current_raw_frame = m.path_name.' m.variable_name '(:,:,m.current_frame);']);
 
+
 			% subtract median if necessary 
-			if m.subtract_median
+			if m.subtract_median & ~isempty(m.median_frame)
 				m.current_raw_frame = m.current_raw_frame - m.median_frame;
 			end
 
