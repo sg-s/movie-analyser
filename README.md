@@ -72,14 +72,24 @@ end
 
 ## Methods
 
+Use `methods(movieAnalyser)` to see all the methods of this class. Here are the methods meant to be user-facing:
+
+
+- `computeMedianFrame` computes the median frame over some interval. Very useful in removing static backgrounds. 
 - `createGUI` makes the GUI
 - `testReadSpeed` determines the time to read a hundred frames. If this is very slow, you're not going to have a good time
-- `computeMedianFrame` computes the median frame over some interval. Very useful in removing static backgrounds. 
+- `nextFrame` step to the next frame (and run `operateOnFrame`)
+- `operateOnFrame` perform some operations on the current frame.  `movieAnalyser` reads the current frame from disk and loads it to `m.current_raw_frame` for you. 
+- `prevFrame` step to the previous frame (and run `operateOnFrame`)
+- `quitMovieAnalyser` quit
+- `scrubberCallback` (internal callback when you move the scrubber)
+- `testReadSpeed` tests the number of frames you can read in 2 seconds. If this is low, you're going to have a bad time. 
+
 
 ## Limitations 
 
-1. `movieAnalyser` is explicitly designed for tracking algorithms that operate frame by frame. Something more complicated is outside its use case.
-2. `movieAnalyser` is capable only of playing back frames at a maximum speed of 20 frames per second, due to limitations in MATLAB's [graphics engine](https://www.mathworks.com/help/matlab/ref/drawnow.html)
+1. `movieAnalyser` is explicitly designed for tracking algorithms that operate frame by frame. Something more complicated is outside the use case.
+2. `movieAnalyser` is capable only of playing back frames at a maximum speed of 20 frames per second, due to limitations in MATLAB's [graphics engine](https://www.mathworks.com/help/matlab/ref/drawnow.html). Headless operation is limited by your file I/O speeds. Get a fast SSD. 
 3. When working with a matrix containing a movie in a matfile, you should not store any other variable in that matfile, especially nested structures. This slows down read speeds dramatically. 
 
 # License 

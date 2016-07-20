@@ -95,7 +95,7 @@ classdef movieAnalyser < handle
 			% 
 
 			% read frame
-			eval(['m.current_raw_frame = m.path_name.' m.variable_name '(:,:,m.current_frame);']);
+			m.current_raw_frame = m.path_name.(m.variable_name)(:,:,m.current_frame);
 
 
 			% subtract median if necessary 
@@ -140,25 +140,27 @@ classdef movieAnalyser < handle
 			fn = fieldnames(m.handles);
 			for i = 1:length(fn)
 				try
-					delete(getfield(m.handles,fn{i}))
+					delete(m.handles.(fn{i}))
 				catch
 				end
-				m.handles = setfield(m.handles,fn{i},[]);
+				m.handles.(fn{i}) = [];
 			end
 		end
 
 		function m = testReadSpeed(m)
 			% do a sequential read test
 			m.current_frame = 1;
-			a = 1;
-			z = min([m.nframes 100]);
 			tic;
-			for i = a:z
+			for i = 1:m.nframes
 				m.current_frame = i;
 				m.operateOnFrame;
+				t = toc;
+				if t > 2
+					break
+				end
 			end
 			t = toc;
-			disp([ oval(z-a) ' frames read in ' oval(t) ' seconds.'])
+			disp([ oval(i) ' frames read in ' oval(t) ' seconds.'])
 		end
 
 		function m = computeMedianFrame(m)
@@ -173,7 +175,7 @@ classdef movieAnalyser < handle
 			read_these_frames = a:m.median_step:z;
 			for i = 1:length(read_these_frames)
 				cf = read_these_frames(i);
-				eval(['M(:,:,i) = m.path_name.' m.variable_name '(:,:,cf);']);
+				M(:,:,i) = m.path_name.(m.variable_name)(:,:,cf); % this is 10X faster than a direct assignation; don't drink from the for-loops-are-bad-kool-aid font
 			end
 			m.median_frame = median(M,3);
 
