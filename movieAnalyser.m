@@ -7,7 +7,8 @@
 classdef movieAnalyser < handle
 
 	properties
-		handles
+		ui_handles
+		plot_handles
 		path_name
 		current_frame = 1;
 		current_raw_frame 			% stores the raw image of the current working frame
@@ -22,26 +23,27 @@ classdef movieAnalyser < handle
 
 	methods
 		function m = createGUI(m)
-			m.handles.fig = figure('NumberTitle','off','MenuBar','none','ToolBar','figure','CloseRequestFcn',@m.quitMovieAnalyser); hold on;
-			m.handles.fig.Tag = 'movieAnalyser';
-			m.handles.fig.Position(3) = 1280;
-			m.handles.fig.Position(4) = 800;
-			m.handles.ax = gca;
-			m.handles.pause_button = uicontrol('Units','normalized','Position',[.45 .01 .1 .05],'String','Play','Style','togglebutton','Value',1,'Callback',@m.togglePlay);
-			m.handles.next_button = uicontrol('Units','normalized','Position',[.55 .01 .1 .05],'String','>','Style','togglebutton','Value',1,'Callback',@m.nextFrame);
-			m.handles.prev_button = uicontrol('Units','normalized','Position',[.35 .01 .1 .05],'String','<','Style','togglebutton','Value',1,'Callback',@m.prevFrame);
-			m.handles.ax.Position = [0.01 0.15 0.99 0.85];
-
-			m.handles.im = imagesc([0 0; 0 0]);
-
+			m.ui_handles.fig = figure('NumberTitle','off','MenuBar','none','ToolBar','figure','CloseRequestFcn',@m.quitMovieAnalyser); hold on;
+			m.ui_handles.fig.Tag = 'movieAnalyser';
+			m.ui_handles.fig.Position(3) = 1280;
+			m.ui_handles.fig.Position(4) = 800;
+			
+			m.ui_handles.pause_button = uicontrol('Units','normalized','Position',[.45 .01 .1 .05],'String','Play','Style','togglebutton','Value',1,'Callback',@m.togglePlay);
+			m.ui_handles.next_button = uicontrol('Units','normalized','Position',[.55 .01 .1 .05],'String','>','Style','togglebutton','Value',1,'Callback',@m.nextFrame);
+			m.ui_handles.prev_button = uicontrol('Units','normalized','Position',[.35 .01 .1 .05],'String','<','Style','togglebutton','Value',1,'Callback',@m.prevFrame);
+			
 			% make a scrubber
-			m.handles.scrubber = uicontrol('Units','normalized','Style','slider','Position',[0 0.09 1 .01],'Parent',m.handles.fig,'Min',1,'Max',m.current_frame+1,'Value',m.current_frame,'SliderStep',[.01 .02],'BusyAction','cancel','Interruptible','off');
-			addlistener(m.handles.scrubber,'ContinuousValueChange',@m.scrubberCallback);
+			m.ui_handles.scrubber = uicontrol('Units','normalized','Style','slider','Position',[0 0.09 1 .01],'Parent',m.ui_handles.fig,'Min',1,'Max',m.current_frame+1,'Value',m.current_frame,'SliderStep',[.01 .02],'BusyAction','cancel','Interruptible','off');
+			addlistener(m.ui_handles.scrubber,'ContinuousValueChange',@m.scrubberCallback);
+
+			m.plot_handles.ax = gca;
+			m.plot_handles.ax.Position = [0.01 0.15 0.99 0.85];
+			m.plot_handles.im = imagesc([0 0; 0 0]);
 
 
 			% if path_name is set, operate on frame
 			if ~isempty(m.path_name)
-				m.handles.scrubber.Max = m.nframes;
+				m.ui_handles.scrubber.Max = m.nframes;
 				m.operateOnFrame;
 			end
 
@@ -51,7 +53,7 @@ classdef movieAnalyser < handle
 		end % end createGUI function
 		
 		function m = scrubberCallback(m,~,~)
-			m.current_frame = ceil(m.handles.scrubber.Value);
+			m.current_frame = ceil(m.ui_handles.scrubber.Value);
 			m.operateOnFrame;
 		end
 
@@ -103,12 +105,10 @@ classdef movieAnalyser < handle
 				m.current_raw_frame = m.current_raw_frame - m.median_frame;
 			end
 
-			if isfield(m.handles,'ax')
-				if ~isempty(m.handles.ax)
-					% cla(m.handles.ax)
-					% imagesc(m.current_raw_frame);
-					m.handles.im.CData = m.current_raw_frame;
-					m.handles.fig.Name = ['Frame # ' oval(m.current_frame)];
+			if isfield(m.plot_handles,'ax')
+				if ~isempty(m.plot_handles.ax)
+					m.plot_handles.im.CData = m.current_raw_frame;
+					m.ui_handles.fig.Name = ['Frame # ' oval(m.current_frame)];
 					
 				end
 			end
@@ -121,7 +121,7 @@ classdef movieAnalyser < handle
 				% now loop through all frames
 				for i = m.current_frame:m.nframes
 					m.current_frame  = i;
-					m.handles.scrubber.Value = i;
+					m.ui_handles.scrubber.Value = i;
 					if strcmp(src.String,'Pause')
 						m.operateOnFrame;
 						drawnow limitrate
@@ -137,13 +137,21 @@ classdef movieAnalyser < handle
 
 		function m = quitMovieAnalyser(m,~,~)
 			% clear all handles
-			fn = fieldnames(m.handles);
+			fn = fieldnames(m.ui_handles);
 			for i = 1:length(fn)
 				try
-					delete(m.handles.(fn{i}))
+					delete(m.ui_handles.(fn{i}))
 				catch
 				end
-				m.handles.(fn{i}) = [];
+				m.ui_handles.(fn{i}) = [];
+			end
+			fn = fieldnames(m.plot_handles);
+			for i = 1:length(fn)
+				try
+					delete(m.plot_handles.(fn{i}))
+				catch
+				end
+				m.plot_handles.(fn{i}) = [];
 			end
 		end
 
