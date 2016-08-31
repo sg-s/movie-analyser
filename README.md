@@ -94,7 +94,7 @@ Use `methods(movieAnalyser)` to see all the methods of this class. Here are the 
 
 1. `movieAnalyser` is explicitly designed for tracking algorithms that operate frame by frame. Something more complicated is outside the use case.
 2. `movieAnalyser` is capable only of playing back frames at a maximum speed of 20 frames per second, due to limitations in MATLAB's [graphics engine](https://www.mathworks.com/help/matlab/ref/drawnow.html). Headless operation is limited by your file I/O speeds. Get a fast SSD. 
-3. When working with a matrix containing a movie in a matfile, ~~you should not store any other variable in that matfile, especially nested structures. This slows down read speeds dramatically. ~~ Make sure you save your .mat file in an uncompressed format, using `savefast`. 
+3. When working with a matrix containing a movie in a matfile, ~~you should not store any other variable in that matfile, especially nested structures. This slows down read speeds dramatically.~~ Make sure you save your .mat file in an uncompressed format, using `savefast`. 
 
 # License 
 
