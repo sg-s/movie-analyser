@@ -40,9 +40,9 @@ install srinivas.gs_mtools
 By default, `movieAnalyser` assumes your movies are HDF5 (.mat v7.3+) files with the images stored in a 3D matrix called `frames`. `movieAnalyser` uses `matfile` to speed up data reads. If your movie is in a 3D matrix with a different name, set the `variable_name` property correctly. 
 
 > WARNING! 
-matlab compresses matrices when storing them to disk. This dramatically slows down read speeds. If you're not able to read at least ~100 frames per second using `testReadSpeed`, you should re-save your .mat file using the excellent `savefast` functionhttps://github.com/sg-s/srinivas.gs_mtools/blob/master/src/file-tools/savefast.m, which you can find [here](https://github.com/sg-s/srinivas.gs_mtools/blob/master/src/file-tools/savefast.m).
+matlab compresses matrices when storing them to disk. This dramatically slows down read speeds. If you're not able to read at least ~100 frames per second using `testReadSpeed`, you should re-save your .mat file using the excellent `savefast` function, which you can find [here](https://github.com/sg-s/srinivas.gs_mtools/blob/master/src/file-tools/savefast.m).
 
-If your movies are in a different format, you'll have to modify `movieAnalyser` so that it knows how to read frames off your movie.
+If your movies are in a different format, you'll have to modify `movieAnalyser.operateOnFrame` so that it knows how to read frames off your movie.
 
 
 ### 2. add your tracking/analysis code 
@@ -81,7 +81,7 @@ Use `methods(movieAnalyser)` to see all the methods of this class. Here are the 
 
 - `computeMedianFrame` computes the median frame over some interval. Very useful in removing static backgrounds. 
 - `createGUI` makes the GUI
-- `testReadSpeed` determines the time to read a hundred frames. If this is very slow, you're not going to have a good time
+- `testReadSpeed` determines how many frames it can read in 2s. If this is very slow, you're not going to have a good time. See below for how to get very fast read speeds using `savefast`
 - `nextFrame` step to the next frame (and run `operateOnFrame`)
 - `operateOnFrame` perform some operations on the current frame.  `movieAnalyser` reads the current frame from disk and loads it to `m.current_raw_frame` for you. 
 - `prevFrame` step to the previous frame (and run `operateOnFrame`)
