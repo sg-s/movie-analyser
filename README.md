@@ -39,7 +39,11 @@ install srinivas.gs_mtools
 
 By default, `movieAnalyser` assumes your movies are HDF5 (.mat v7.3+) files with the images stored in a 3D matrix called `frames`. `movieAnalyser` uses `matfile` to speed up data reads. If your movie is in a 3D matrix with a different name, set the `variable_name` property correctly. 
 
+> WARNING! 
+matlab compresses matrices when storing them to disk. This dramatically slows down read speeds. If you're not able to read at least ~100 frames per second using `testReadSpeed`, you should re-save your .mat file using the excellent `savefast` functionhttps://github.com/sg-s/srinivas.gs_mtools/blob/master/src/file-tools/savefast.m, which you can find [here](https://github.com/sg-s/srinivas.gs_mtools/blob/master/src/file-tools/savefast.m).
+
 If your movies are in a different format, you'll have to modify `movieAnalyser` so that it knows how to read frames off your movie.
+
 
 ### 2. add your tracking/analysis code 
 
@@ -90,7 +94,7 @@ Use `methods(movieAnalyser)` to see all the methods of this class. Here are the 
 
 1. `movieAnalyser` is explicitly designed for tracking algorithms that operate frame by frame. Something more complicated is outside the use case.
 2. `movieAnalyser` is capable only of playing back frames at a maximum speed of 20 frames per second, due to limitations in MATLAB's [graphics engine](https://www.mathworks.com/help/matlab/ref/drawnow.html). Headless operation is limited by your file I/O speeds. Get a fast SSD. 
-3. When working with a matrix containing a movie in a matfile, you should not store any other variable in that matfile, especially nested structures. This slows down read speeds dramatically. 
+3. When working with a matrix containing a movie in a matfile, ~~you should not store any other variable in that matfile, especially nested structures. This slows down read speeds dramatically. ~~ Make sure you save your .mat file in an uncompressed format, using `savefast`. 
 
 # License 
 
