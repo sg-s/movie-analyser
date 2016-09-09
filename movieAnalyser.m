@@ -62,7 +62,7 @@ classdef movieAnalyser < handle
 			% verify it is there
 			if isa(value,'matlab.io.MatFile')
 			else
-				assert(exist(value,'file') == 2,'Expected a file path!')
+				assert(exist(value,'file') == 2,'File not found at location! Make sure you supply a path to a file.')
 				m.path_name = matfile(value);
 			end
 			m.path_name.Properties.Writable = true;
