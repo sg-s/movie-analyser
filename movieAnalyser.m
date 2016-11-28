@@ -44,7 +44,7 @@ classdef movieAnalyser < handle
 			% if path_name is set, operate on frame
 			if ~isempty(m.path_name)
 				m.ui_handles.scrubber.Max = m.nframes;
-				m.operateOnFrame;
+				operateOnFrame(m,[],[]);
 			end
 
 			axis tight
@@ -52,9 +52,9 @@ classdef movieAnalyser < handle
 
 		end % end createGUI function
 		
-		function m = scrubberCallback(m,~,~)
+		function m = scrubberCallback(m,src,event)
 			m.current_frame = ceil(m.ui_handles.scrubber.Value);
-			m.operateOnFrame;
+			operateOnFrame(m,src,event);
 		end
 
 		function m = set.path_name(m,value)
@@ -75,21 +75,21 @@ classdef movieAnalyser < handle
 		end % end set path_name
 
 
-		function m = nextFrame(m,~,~)
+		function m = nextFrame(m,src,event)
 			if m.current_frame < m.nframes
 				m.current_frame = m.current_frame + 1;
 			end
-			m.operateOnFrame;
+			operateOnFrame(m,src,event);
 		end
 
-		function m = prevFrame(m,~,~)
+		function m = prevFrame(m,src,event)
 			if m.current_frame > 1
 				m.current_frame = m.current_frame - 1;
 			end
-			m.operateOnFrame;
+			operateOnFrame(m,src,event);
 		end
 
-		function m = operateOnFrame(m,~,~)
+		function m = operateOnFrame(m,src,event)
 			%% ~~~~~~~~~ redefine this method in your class ~~~~~~~~~~~~~~~
 			%% what you probably want to do is first call the method from the superclass (movieAnalyser), and then redefine this function in your subclass
 			% see this link for more information:
@@ -115,7 +115,7 @@ classdef movieAnalyser < handle
 			
 		end
 
-		function m = togglePlay(m,src,~)
+		function m = togglePlay(m,src,event)
 			if strcmp(src.String,'Play')
 				src.String = 'Pause';
 				% now loop through all frames
@@ -123,7 +123,7 @@ classdef movieAnalyser < handle
 					m.current_frame  = i;
 					m.ui_handles.scrubber.Value = i;
 					if strcmp(src.String,'Pause')
-						m.operateOnFrame;
+						operateOnFrame(m,src,event);
 						drawnow limitrate
 					else
 						break
@@ -161,7 +161,7 @@ classdef movieAnalyser < handle
 			tic;
 			for i = 1:m.nframes
 				m.current_frame = i;
-				m.operateOnFrame;
+				operateOnFrame(m,[],[]);
 				t = toc;
 				if t > 2
 					break
