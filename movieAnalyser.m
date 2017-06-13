@@ -54,8 +54,12 @@ classdef movieAnalyser < handle
 		
 		function m = scrubberCallback(m,src,event)
 			m.current_frame = ceil(m.ui_handles.scrubber.Value);
-			operateOnFrame(m,src,event);
 		end
+
+		function m = set.current_frame(m,value)
+			m.current_frame = value;
+			operateOnFrame(m);
+		end % end set current_frame
 
 		function m = set.path_name(m,value)
 			% ~~~~~~~ change me if your data is not a MAT file ~~~~~~~~~~~~~~~~~
@@ -79,14 +83,12 @@ classdef movieAnalyser < handle
 			if m.current_frame < m.nframes
 				m.current_frame = m.current_frame + 1;
 			end
-			operateOnFrame(m,src,event);
 		end
 
 		function m = prevFrame(m,src,event)
 			if m.current_frame > 1
 				m.current_frame = m.current_frame - 1;
 			end
-			operateOnFrame(m,src,event);
 		end
 
 		function m = operateOnFrame(m,src,event)
