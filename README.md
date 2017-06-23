@@ -29,8 +29,8 @@ The recommended way to install this is to use my package manager:
 
 ```matlab
 urlwrite('http://srinivas.gs/install.m','install.m'); 
-install movie-analyser
-install srinivas.gs_mtools  
+install sg-s/movie-analyser
+install sg-s/srinivas.gs_mtools  
 ```
 
 ## Usage
