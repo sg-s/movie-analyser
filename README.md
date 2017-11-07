@@ -1,5 +1,8 @@
 # movieAnalyser
 
+
+[![GitHub last commit](https://img.shields.io/github/last-commit/sg-s/movie-analyser.svg)]()
+
 a MATLAB class to help you bootstrap your image analysis problem.
 
 ## The problem
