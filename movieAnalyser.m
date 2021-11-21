@@ -52,16 +52,16 @@ classdef movieAnalyser < handle
 
 		end % end createGUI function
 		
-		function m = scrubberCallback(m,src,event)
+		function m = scrubberCallback(m,~,~)
 			m.current_frame = ceil(m.ui_handles.scrubber.Value);
 		end
 
-		function m = set.current_frame(m,value)
+		function set.current_frame(m,value)
 			m.current_frame = value;
 			operateOnFrame(m);
 		end % end set current_frame
 
-		function m = set.path_name(m,value)
+		function set.path_name(m,value)
 			% ~~~~~~~ change me if your data is not a MAT file ~~~~~~~~~~~~~~~~~
 			% verify it is there
 			if isa(value,'matlab.io.MatFile')
@@ -79,13 +79,13 @@ classdef movieAnalyser < handle
 		end % end set path_name
 
 
-		function m = nextFrame(m,src,event)
+		function m = nextFrame(m,~,~)
 			if m.current_frame < m.nframes
 				m.current_frame = m.current_frame + 1;
 			end
 		end
 
-		function m = prevFrame(m,src,event)
+		function m = prevFrame(m,~,~)
 			if m.current_frame > 1
 				m.current_frame = m.current_frame - 1;
 			end
