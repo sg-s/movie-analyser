@@ -28,12 +28,10 @@ Since `movieAnalyser` inherits from the `handle` class in MATLAB, all `movieAnal
 
 ## Installation
 
-The recommended way to install this is to use my package manager:
+Download and add the following to your MATLAB path:
 
-```matlab
-urlwrite('http://srinivas.gs/install.m','install.m'); 
-install sg-s/movie-analyser
-install sg-s/srinivas.gs_mtools  
+```
+https://github.com/sg-s/movie-analyser
 ```
 
 ## Usage
